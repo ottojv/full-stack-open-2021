@@ -7,7 +7,12 @@ const Button = (props) => (
 
 const Display = props => <div>{props.value}</div>
 
-const Statistic = props => <p>{props.text} {props.value}</p>
+const Statistic = props => (
+  <tr>
+    <td>{props.text}</td>
+    <td>{props.value}</td>
+  </tr>)
+
 
 const Statistics = props => {
   let total = props.good + props.bad + props.neutral;
@@ -16,13 +21,19 @@ const Statistics = props => {
   if (total > 0) {
     return (
       <div>
-        <h1>statistics</h1>
-        <Statistic text="good" value={props.good} />
-        <Statistic text="neutral" value={props.neutral} />
-        <Statistic text="bad" value={props.bad} />
-        <Statistic text="all" value={total} />
-        <Statistic text="average" value={(props.good - props.bad) / total} />
-        <Statistic text="positive" value={`${props.good / total * 100} %`} />
+        <table>
+          <thead>
+            <h1>statistics</h1>
+          </thead>
+          <tbody>
+            <Statistic text="good" value={props.good} />
+            <Statistic text="neutral" value={props.neutral} />
+            <Statistic text="bad" value={props.bad} />
+            <Statistic text="all" value={total} />
+            <Statistic text="average" value={(props.good - props.bad) / total} />
+            <Statistic text="positive" value={`${props.good / total * 100} %`} />
+          </tbody>
+        </table>
       </div>
     )
   } else {
