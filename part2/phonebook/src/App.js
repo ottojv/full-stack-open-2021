@@ -6,8 +6,14 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault();
-    setPersons(persons.concat({ name: newName }));
+    isUnique(newName)
+      ? setPersons(persons.concat({ name: newName }))
+      : window.alert(`${newName} is already added to phonebook`);
     setNewName("");
+  };
+
+  const isUnique = (name) => {
+    return persons.find((person) => person.name === name) === undefined;
   };
 
   const handleName = (event) => {
