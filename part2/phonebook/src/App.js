@@ -1,15 +1,21 @@
 import React, { useState } from "react";
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([{ name: "Arto Hellas", number: "012-3456789" }]);
   const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+  const [keyword, setKeyword] = useState("");
 
   const addPerson = (event) => {
     event.preventDefault();
     isUnique(newName)
-      ? setPersons(persons.concat({ name: newName }))
+      ? setPersons(persons.concat({ name: newName, number: newNumber }))
       : window.alert(`${newName} is already added to phonebook`);
     setNewName("");
+    setNewNumber("");
   };
 
   const isUnique = (name) => {
@@ -21,23 +27,29 @@ const App = () => {
     setNewName(event.target.value);
   };
 
+  const handleNumber = (event) => {
+    event.preventDefault();
+    setNewNumber(event.target.value);
+  };
+
+  const handleKeyword = (event) => {
+    event.preventDefault();
+    setKeyword(event.target.value);
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
-      <form>
-        <div>
-          name: <input value={newName} onChange={handleName} />
-        </div>
-        <div>
-          <button type="submit" onClick={addPerson}>
-            add
-          </button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {persons.map((person) => (
-        <p key={person.name}>{person.name}</p>
-      ))}
+      <Filter keyword={keyword} handleKeyword={handleKeyword} />
+      <PersonForm
+        name={newName}
+        handleName={handleName}
+        number={newNumber}
+        handleNumber={handleNumber}
+        addPerson={addPerson}
+      />
+      <h3>Numbers</h3>
+      <Persons persons={persons} keyword={keyword} />
     </div>
   );
 };
