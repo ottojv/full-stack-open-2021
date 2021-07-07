@@ -16,10 +16,15 @@ const App = () => {
     setKeyword(event.target.value);
   };
 
+  const handleButton = (countryName, event) => {
+    event.preventDefault();
+    setKeyword(countryName);
+  };
+
   return (
     <div>
       <Filter keyword={keyword} handleKeyword={handleKeyword} />
-      <Countries countries={countries} keyword={keyword} />
+      <Countries countries={countries} keyword={keyword} handleButton={handleButton} />
     </div>
   );
 };
