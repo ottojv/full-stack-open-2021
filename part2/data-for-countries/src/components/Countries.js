@@ -3,7 +3,6 @@ import React from "react";
 import Country from "./Country";
 
 const Countries = ({ countries, keyword, handleButton }) => {
-  console.log(countries);
   let filteredCountries = countries.filter((country) =>
     country.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase())
   );
