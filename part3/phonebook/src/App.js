@@ -1,9 +1,9 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import personService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,23 +12,23 @@ const App = () => {
   const [keyword, setKeyword] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => setPersons(response.data));
+    personService.getPersons().then((response) => setPersons(response.data));
   }, []);
 
   const addPerson = (event) => {
     event.preventDefault();
 
     isUnique(newName)
-      ? axios
-          .post("http://localhost:3001/persons", {
-            name: newName,
-            number: newNumber,
-          })
-          .then((response) => {
-            setPersons(persons.concat(response.data));
-            setNewName("");
-            setNewNumber("");
-          })
+      ? personService
+        .create({
+          name: newName,
+          number: newNumber,
+        })
+        .then((response) => {
+          setPersons(persons.concat(response.data));
+          setNewName("");
+          setNewNumber("");
+        })
       : window.alert(`${newName} is already added to phonebook`);
   };
 
@@ -62,6 +62,7 @@ const App = () => {
         handleNumber={handleNumber}
         addPerson={addPerson}
       />
+
       <h3>Numbers</h3>
       <Persons persons={persons} keyword={keyword} />
     </div>
