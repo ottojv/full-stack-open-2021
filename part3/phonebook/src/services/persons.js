@@ -5,7 +5,18 @@ const getPersons = () => axios.get(`${baseURL}`);
 
 const create = (newPerson) => axios.post(baseURL, newPerson);
 
-export default {
+const deletePerson = (person) => {
+  if (window.confirm(`Delete ${person.name}`)) {
+    return axios.delete(`${baseURL}/${person.id}`);
+  }
+
+  return null;
+};
+
+const personService = {
   getPersons,
   create,
+  deletePerson,
 };
+
+export default personService;

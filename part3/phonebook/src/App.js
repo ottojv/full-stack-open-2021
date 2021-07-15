@@ -20,15 +20,15 @@ const App = () => {
 
     isUnique(newName)
       ? personService
-        .create({
-          name: newName,
-          number: newNumber,
-        })
-        .then((response) => {
-          setPersons(persons.concat(response.data));
-          setNewName("");
-          setNewNumber("");
-        })
+          .create({
+            name: newName,
+            number: newNumber,
+          })
+          .then((response) => {
+            setPersons(persons.concat(response.data));
+            setNewName("");
+            setNewNumber("");
+          })
       : window.alert(`${newName} is already added to phonebook`);
   };
 
