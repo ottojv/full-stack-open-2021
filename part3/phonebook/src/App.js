@@ -13,27 +13,43 @@ const App = () => {
 
   useEffect(() => {
     personService.getPersons().then((response) => setPersons(response.data));
-  }, []);
+  });
+
+  const newPerson = () =>
+    personService
+      .createPerson({ name: newName, number: newNumber })
+      .then((response) => {
+        setPersons(persons.concat(response.data));
+        setNewName("");
+        setNewNumber("");
+      });
+
+  const updatePerson = (person) =>
+    personService
+      .updatePerson(person.id, { name: newName, number: newNumber })
+      .then((response) => {
+        setPersons(persons.concat(response.data));
+        setNewName("");
+        setNewNumber("");
+      });
 
   const addPerson = (event) => {
     event.preventDefault();
 
-    isUnique(newName)
-      ? personService
-          .create({
-            name: newName,
-            number: newNumber,
-          })
-          .then((response) => {
-            setPersons(persons.concat(response.data));
-            setNewName("");
-            setNewNumber("");
-          })
-      : window.alert(`${newName} is already added to phonebook`);
+    const foundPerson = searchPersonByName(newName);
+    if (!foundPerson) {
+      newPerson();
+    } else if (
+      window.confirm(
+        `${foundPerson.name} is already added to the phonebook, replace the old number with a new one?`
+      )
+    ) {
+      updatePerson(foundPerson);
+    }
   };
 
-  const isUnique = (name) => {
-    return persons.find((person) => person.name === name) === undefined;
+  const searchPersonByName = (name) => {
+    return persons.find((person) => person.name === name);
   };
 
   const handleName = (event) => {

@@ -3,7 +3,7 @@ const baseURL = "http://localhost:3001/persons";
 
 const getPersons = () => axios.get(`${baseURL}`);
 
-const create = (newPerson) => axios.post(baseURL, newPerson);
+const createPerson = (newPerson) => axios.post(baseURL, newPerson);
 
 const deletePerson = (person) => {
   if (window.confirm(`Delete ${person.name}`)) {
@@ -13,10 +13,14 @@ const deletePerson = (person) => {
   return null;
 };
 
+const updatePerson = (id, updatedPerson) =>
+  axios.put(`${baseURL}/${id}`, updatedPerson);
+
 const personService = {
   getPersons,
-  create,
+  createPerson,
   deletePerson,
+  updatePerson,
 };
 
 export default personService;
