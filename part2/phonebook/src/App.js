@@ -1,9 +1,9 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import personService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,20 +12,44 @@ const App = () => {
   const [keyword, setKeyword] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => setPersons(response.data));
-  }, []);
+    personService.getPersons().then((response) => setPersons(response.data));
+  });
+
+  const newPerson = () =>
+    personService
+      .createPerson({ name: newName, number: newNumber })
+      .then((response) => {
+        setPersons(persons.concat(response.data));
+        setNewName("");
+        setNewNumber("");
+      });
+
+  const updatePerson = (person) =>
+    personService
+      .updatePerson(person.id, { name: newName, number: newNumber })
+      .then((response) => {
+        setPersons(persons.concat(response.data));
+        setNewName("");
+        setNewNumber("");
+      });
 
   const addPerson = (event) => {
     event.preventDefault();
-    isUnique(newName)
-      ? setPersons(persons.concat({ name: newName, number: newNumber }))
-      : window.alert(`${newName} is already added to phonebook`);
-    setNewName("");
-    setNewNumber("");
+
+    const foundPerson = searchPersonByName(newName);
+    if (!foundPerson) {
+      newPerson();
+    } else if (
+      window.confirm(
+        `${foundPerson.name} is already added to the phonebook, replace the old number with a new one?`
+      )
+    ) {
+      updatePerson(foundPerson);
+    }
   };
 
-  const isUnique = (name) => {
-    return persons.find((person) => person.name === name) === undefined;
+  const searchPersonByName = (name) => {
+    return persons.find((person) => person.name === name);
   };
 
   const handleName = (event) => {
@@ -54,6 +78,7 @@ const App = () => {
         handleNumber={handleNumber}
         addPerson={addPerson}
       />
+
       <h3>Numbers</h3>
       <Persons persons={persons} keyword={keyword} />
     </div>
