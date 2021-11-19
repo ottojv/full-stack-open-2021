@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 import personService from "./services/persons";
 
 const App = () => {
@@ -10,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [keyword, setKeyword] = useState("");
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     personService.getPersons().then((response) => setPersons(response.data));
@@ -22,6 +24,10 @@ const App = () => {
         setPersons(persons.concat(response.data));
         setNewName("");
         setNewNumber("");
+        setNotification(`Added ${newName}.`);
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
       });
 
   const updatePerson = (person) =>
@@ -31,6 +37,16 @@ const App = () => {
         setPersons(persons.concat(response.data));
         setNewName("");
         setNewNumber("");
+        setNotification(`Updated ${newName}.`);
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
+      })
+      .catch((error) => {
+        setNotification(`${newName} was already deleted from the server`);
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
       });
 
   const addPerson = (event) => {
@@ -70,6 +86,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} />
       <Filter keyword={keyword} handleKeyword={handleKeyword} />
       <PersonForm
         name={newName}
